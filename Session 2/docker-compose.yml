@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+    wordpress:
+        image: wordpress
+        restart: always
+        stdin_open: true
+        tty: true
+        deploy:
+          mode: replicated
+          replicas: 3
+        environment:
+            WORDPRESS_DB_HOST: mariadb
+            WORDPRESS_DB_USER: db_user
+            WORDPRESS_DB_PASSWORD: db_user_pass
+            WORDPRESS_DB_NAME: db_name
+        volumes:
+            - ./wordpress:/var/www/html
+    mariadb:
+        container_name: mariadb
+        image: mariadb:10.6
+        restart: always
+        environment:
+            MYSQL_DATABASE: db_name
+            MYSQL_USER: db_user
+            MYSQL_PASSWORD: db_user_pass
+            MYSQL_RANDOM_ROOT_PASSWORD: 'root_pass'
+        volumes:
+            - db_data:/var/lib/mysql
+    nginx:
+        container_name: nginx
+        image: nginx:latest
+        restart: unless-stopped
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./nginx/conf:/etc/nginx/conf.d
+            - ./certbot/conf:/etc/nginx/ssl
+            - ./certbot/data:/var/www/html
+    certbot:
+        container_name: certbot
+        image: certbot/certbot:latest
+        command: certonly --webroot --webroot-path=/var/www/html --email youremail@domain.com --agree-tos --no-eff-email -d 1f074a2b.nip.io -d www.1f074a2b.nip.io
+        volumes:
+            - ./certbot/conf:/etc/letsencrypt
+            - ./certbot/logs:/var/log/letsencrypt
+            - ./certbot/data:/var/www/html
+volumes:
+    db_data:
+    wordpress_data:
