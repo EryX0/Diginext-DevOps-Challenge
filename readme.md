@@ -1,6 +1,6 @@
 # Diginext DevOps Challenge
 
-This is a challenge (well it was actually a real bootcamp) provided by Diginext, each task ideally has 7 days deadline to be completed.
+This is a challenge (well it was actually a real bootcamp) provided by Diginext, ideally each task  has 7 days deadline to be completed.
 this is the full table :
 
 | Session Number    | Task Subject                                             | COMPLETED ? |
